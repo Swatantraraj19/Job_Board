@@ -1,16 +1,21 @@
-# React + Vite
+# Job Board / Hacker News Viewer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern React application that allows users to browse the latest jobs, top stories, and new stories from Hacker News. Built with performance and aesthetics in mind using Vite and Tailwind CSS.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Category Switching**: Seamlessly toggle between "Jobs", "Top Stories", and "New Stories".
+- **Live Data**: Fetches real-time data using the Hacker News API.
+- **Pagination**: Navigate through listings effectively with "Load More" and "Previous" functionality.
+- **Modern UI**: A clean, responsive interface styled with Tailwind CSS (v4) featuring hover effects and smooth transitions.
+- **External Links**: Direct access to the source content or job postings.
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **[React 19](https://react.dev/)**: The library for web and native user interfaces.
+- **[Vite](https://vitejs.dev/)**: Next Generation Frontend Tooling.
+- **[Tailwind CSS](https://tailwindcss.com/)**: A utility-first CSS framework.
+- **[Axios](https://axios-http.com/)**: Promise based HTTP client for the browser.
+- **[Lucide React](https://lucide.dev/)**: Beautiful & consistent icons.
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
