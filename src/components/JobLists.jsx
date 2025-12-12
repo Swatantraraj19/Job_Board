@@ -1,5 +1,6 @@
 import React from 'react'
 import useHackerNews from '../hooks/useHackerNews';
+import { Link } from 'react-router-dom';
 
 const JobLists = ({ category }) => {
 
@@ -35,6 +36,16 @@ const JobLists = ({ category }) => {
                             <span className='bg-zinc-200/50 px-2 py-0.5 rounded text-zinc-600'>By {job.by}</span>
                             <span>•</span>
                             <span>{new Date(job.time * 1000).toLocaleDateString()}</span>
+
+                           
+                            <span className="ml-auto">
+                                <Link
+                                    to={`/item/${job.id}`}
+                                    className="text-indigo-600 hover:underline font-medium"
+                                >
+                                    View Details →
+                                </Link>
+                            </span>
                         </div>
                     </div>
                 ))}
