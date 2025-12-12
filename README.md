@@ -18,6 +18,7 @@ A modern React application that allows users to browse the latest jobs, top stor
 - **[Axios](https://axios-http.com/)**: Promise based HTTP client for the browser.
 - **[Lucide React](https://lucide.dev/)**: Beautiful & consistent icons.
 
+<<<<<<< HEAD
 ## Getting Started
 
 Follow these steps to get the project running on your local machine.
@@ -61,3 +62,6 @@ The application will be available at [http://localhost:5173](http://localhost:51
 - `npm run build`: Builds the app for production.
 - `npm run lint`: Runs ESLint to check for code quality issues.
 - `npm run preview`: Locally preview the production build.
+=======
+
+>>>>>>> 812fd8e1bd80e21386908fa2a016538610657db0
