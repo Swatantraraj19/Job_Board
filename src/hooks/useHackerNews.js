@@ -1,132 +1,90 @@
- 
-///////////////  using one useeffect //////////////////////////
-
-// import { useState, useEffect } from 'react';
-// import axios from 'axios';
-
-// // We accept 'type' so we can fetch 'jobstories', 'topstories', or 'newstories' later!
-// const useHackerNews = (type) => {
-//     const [posts, setPosts] = useState([]); // Renamed 'jobs' to 'posts' to be generic
-//     const [loading, setLoading] = useState(true);
-//     const [error, setError] = useState(null);
-//     const [count,setcount]= useState(9)
-
-//     useEffect(() => {
-//         const fetchData = async () => {
-//             setLoading(true);
-//             try {
-//                 // 1. Fetch IDs based on the 'type' passed in
-//                 const response = await axios.get(`https://hacker-news.firebaseio.com/v0/${type}.json`);
-//                 const itemIds = response.data.slice(0, count);
-
-//                 // 2. Fetch details
-//                 const items = await Promise.all(
-//                     itemIds.map(id => 
-//                         axios.get(`https://hacker-news.firebaseio.com/v0/item/${id}.json`)
-//                              .then(res => res.data)
-//                     )
-//                 );
-
-//                 setPosts(items);
-//                 setLoading(false);
-//             } catch (err) {
-//                 console.error(err);
-//                 setError("Failed to fetch data");
-//                 setLoading(false);
-//             }
-//         };
-
-//         fetchData();
-//     }, [count,type]); 
-    
-//     const loadMore = () => {
-//         setcount((prevcount)=>prevcount+9);
-//     };
-//     const previousJobs = () => {
-//         if(count>9)
-//         setcount((prevcount)=>prevcount-9);
-//     };
-//     // Dependency array includes 'type' so if it changes, we re-fetch!
-
-//     return { posts, loading, error,loadMore,previousJobs };
-// };
-
-// export default useHackerNews;
-
-
-///////////////////// using 2 useeffect for performance optimization //////////////////////////
-
-
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-
 const useHackerNews = (type) => {
-
-    const [posts, setposts] = useState([]); 
+    const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [allIds, setAllIds] = useState([]);
 
-    const [allIds, setallIds] = useState([])
-    const [visiblecount, setvisiblecount] = useState(9)
+    // Pagination State
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 9;
 
-
+    // 1. Fetch ALL IDs once when 'type' changes
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchIds = async () => {
             setLoading(true);
             try {
-               
                 const response = await axios.get(`https://hacker-news.firebaseio.com/v0/${type}.json`);
-                setallIds(response.data);
-
-               
+                setAllIds(response.data || []);
+                setCurrentPage(1); // Reset to page 1 when category changes
             } catch (err) {
                 console.error(err);
-                setError("Failed to fetch Ids");
+                setError("Failed to fetch IDs");
                 setLoading(false);
             }
         };
 
-        fetchData();
+        fetchIds();
     }, [type]);
 
-    useEffect( ()=>{
+    // 2. Fetch specific POSTS whenever 'currentPage' or 'allIds' changes
+    useEffect(() => {
+        if (allIds.length === 0) return;
 
-         if(allIds.length===0) return;  
 
-         const fetchPosts = async () => {
+        const fetchPosts = async () => {
+            setLoading(true);
             try {
-                const nextBatch=allIds.slice(0,visiblecount);
-                const items =await Promise.all(
-                    nextBatch.map(id=>axios.get(`https://hacker-news.firebaseio.com/v0/item/${id}.json`)
-                      .then(res=>res.data)
-                ));
-                
-                setposts(items);
+
+                const startIndex = (currentPage - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+                const currentBatchIds = allIds.slice(startIndex, endIndex);
+
+                const items = await Promise.all(
+                    currentBatchIds.map(id =>
+                        axios.get(`https://hacker-news.firebaseio.com/v0/item/${id}.json`).then(res => res.data)
+                    )
+                );
+
+                setPosts(items);
                 setLoading(false);
-} catch (error) {
-    console.error(error);
-    setError("Failed to fetch posts");
-    setLoading(false);
-}
+            } catch (error) {
+                console.error(error);
+                setError("Failed to fetch posts");
+                setLoading(false);
+            }
+        };
 
-} ;
+        fetchPosts();
 
-fetchPosts();
-    },[allIds,visiblecount]);
+    }, [allIds, currentPage]);
 
 
-    const loadMore = () => {
-        setvisiblecount((prev)=>prev+9);
-    }
-
-    const previousJobs =()=>{
-        if(visiblecount>9){
-            setvisiblecount((prev)=>prev-9);
+    const nextPage = () => {
+        if (currentPage < Math.ceil(allIds.length / itemsPerPage)) {
+            setCurrentPage(prev => prev + 1);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-    }
+    };
 
-    return { posts, loading, error,loadMore,previousJobs };
+    const prevPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(prev => prev - 1);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
 
+    return {
+        posts,
+        loading,
+        error,
+        currentPage,
+        totalPages: Math.ceil(allIds.length / itemsPerPage),
+        nextPage,
+        prevPage
+    };
 }
+
 export default useHackerNews;
