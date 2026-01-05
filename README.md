@@ -19,6 +19,7 @@ A modern React application that allows users to browse the latest jobs, top stor
 - **[Lucide React](https://lucide.dev/)**: Beautiful & consistent icons.
 
 <<<<<<< HEAD
+
 ## Getting Started
 
 Follow these steps to get the project running on your local machine.
@@ -31,6 +32,7 @@ Follow these steps to get the project running on your local machine.
 ### Installation
 
 1. **Clone the repository** (if applicable) or navigate to the project folder:
+
    ```bash
    cd job_board
    ```
@@ -61,7 +63,6 @@ The application will be available at [http://localhost:5173](http://localhost:51
 - `npm run dev`: Starts the development server.
 - `npm run build`: Builds the app for production.
 - `npm run lint`: Runs ESLint to check for code quality issues.
-- `npm run preview`: Locally preview the production build.
-=======
+- # `npm run preview`: Locally preview the production build.
 
->>>>>>> 812fd8e1bd80e21386908fa2a016538610657db0
+> > > > > > > 812fd8e1bd80e21386908fa2a016538610657db0

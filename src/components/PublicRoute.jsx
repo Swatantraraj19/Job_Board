@@ -1,15 +1,14 @@
-import { Navigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const PublicRoute = ({ children }) => {
-    const { user } = useAuth();
+  const { user } = useAuth();
 
+  if (user) {
+    return <Navigate to="/joblists" replace />;
+  }
 
-    if (user) {
-        return <Navigate to="/joblists" replace />;
-    }
-
-    return children;
+  return children;
 };
 
 export default PublicRoute;
