@@ -18,43 +18,9 @@ A modern React application that allows users to browse the latest jobs, top stor
 - **[Axios](https://axios-http.com/)**: Promise based HTTP client for the browser.
 - **[Lucide React](https://lucide.dev/)**: Beautiful & consistent icons.
 
-## Getting Started
 
-Follow these steps to get the project running on your local machine.
 
-### Prerequisites
 
-- Node.js (v18 or higher recommended)
-- npm (comes with Node.js)
-
-### Installation
-
-1. **Clone the repository** (if applicable) or navigate to the project folder:
-
-   ```bash
-   cd job_board
-   ```
-
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
-
-### Running the App
-
-Start the development server:
-
-```bash
-npm run dev
-```
-
-The application will be available at [http://localhost:5173](http://localhost:5173) (or the port shown in your terminal).
-
-## Project Structure
-
-- **`src/App.jsx`**: Main layout handling category selection and state.
-- **`src/components/JobLists.jsx`**: Component responsible for rendering the list of items.
-- **`src/hooks/useHackerNews.js`**: Custom hook managing API calls and pagination logic.
 
 ## Scripts
 
