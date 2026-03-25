@@ -1,30 +1,79 @@
-# Job Board / Hacker News Viewer
+# 🚀 JobBoard: Next-Generation Cloud-Powered Career Platform
 
-A modern React application that allows users to browse the latest jobs, top stories, and new stories from Hacker News. Built with performance and aesthetics in mind using Vite and Tailwind CSS.
+**JobBoard** is a sophisticated, full-stack React application designed for the modern developer seeking career opportunities. By integrating the **Hacker News API** with a robust **Firebase Backend**, JobBoard provides real-time job tracking, personalized user profiles, and seamless cloud synchronization across all devices.
 
-## Features
+---
 
-- **Category Switching**: Seamlessly toggle between "Jobs", "Top Stories", and "New Stories".
-- **Live Data**: Fetches real-time data using the Hacker News API.
-- **Pagination**: Navigate through listings effectively with "Load More" and "Previous" functionality.
-- **Modern UI**: A clean, responsive interface styled with Tailwind CSS (v4) featuring hover effects and smooth transitions.
-- **External Links**: Direct access to the source content or job postings.
+## ✨ Key Features
 
-## Tech Stack
+### 👤 Advanced Authentication
+- **Multi-Method Login:** Seamless integration with **Google OAuth** and traditional Secure Email/Password flows.
+- **Dynamic Profiles:** Personalized user dashboards that automatically pull names and photos from social providers.
+- **Security-First Signup:** Built-in validation for trusted domains (Gmail, Outlook) and enforced password complexity.
 
-- **[React 19](https://react.dev/)**: The library for web and native user interfaces.
-- **[Vite](https://vitejs.dev/)**: Next Generation Frontend Tooling.
-- **[Tailwind CSS](https://tailwindcss.com/)**: A utility-first CSS framework.
-- **[Axios](https://axios-http.com/)**: Promise based HTTP client for the browser.
-- **[Lucide React](https://lucide.dev/)**: Beautiful & consistent icons.
+### ☁️ Cloud Persistence (Powered by Firestore)
+- **Real-Time Sync:** Saved jobs are instantly synchronized to the **Cloud Firestore** database.
+- **Cross-Device Continuity:** Start saving jobs on your desktop and view them instantly on your mobile device.
+- **Secure Data Mapping:** User-specific data silos ensuring that your saved opportunities are private and protected.
 
+### 🛠️ Professional UI/UX
+- **Smooth Navigation:** Built with **React Router v6** for a seamless, SPA experience.
+- **Theme Support:** Native Dark/Light mode support using Tailwind CSS.
+- **Premium Aesthetics:** Modern, responsive design utilizing the Lucide icon set and glassmorphism principles.
 
+### 🛡️ Security & Performance
+- **Vulnerability Patching:** All dependencies are audited and secured via **Snyk**.
+- **Pagination Engine:** High-performance data fetching from the Hacker News API with custom pagination logic.
 
+---
 
+## 🏗️ Technology Stack
 
-## Scripts
+| Layer | Technologies |
+| :--- | :--- |
+| **Frontend** | React 18+, Vite, Tailwind CSS 4 |
+| **Backend** | Firebase Authentication, Cloud Firestore |
+| **API** | Hacker News API |
+| **Icons & Style** | Lucide React, Google Fonts (Inter/Roboto) |
+| **Security** | Snyk, Firebase Security Rules |
 
-- `npm run dev`: Starts the development server.
-- `npm run build`: Builds the app for production.
-- `npm run lint`: Runs ESLint to check for code quality issues.
-- `npm run preview`: Locally preview the production build.
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/Swatantraraj19/Job_Board.git
+cd Job_Board
+```
+
+### 2. Install dependencies
+```bash
+npm install
+```
+
+### 3. Setup Firebase
+- Create a new project in [Firebase Console](https://console.firebase.google.com/).
+- Enable **Authentication** (Google & Email/Password).
+- Enable **Firestore Database** in Test Mode.
+- Update `src/lib/firebase.js` with your project credentials.
+
+### 4. Run Locally
+```bash
+npm run dev
+```
+
+---
+
+## 👨‍💻 Professional Summary
+
+*"Developed a scalable React-based job board utilizing the Hacker News API. Migrated local storage to **Firebase Firestore** for real-time synchronization. Architected a robust auth system with **Google OAuth**, custom **Security Rules**, and resolved vulnerabilities using **Snyk** for a production-ready codebase."*
+
+---
+
+## 📜 License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+### **Made with ❤️ by [Swatantraraj Singh](https://github.com/Swatantraraj19)**
