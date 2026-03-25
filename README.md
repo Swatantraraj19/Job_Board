@@ -70,7 +70,7 @@ npm run dev
 *"Developed a scalable React-based job board utilizing the Hacker News API. Migrated local storage to **Firebase Firestore** for real-time synchronization. Architected a robust auth system with **Google OAuth**, custom **Security Rules**, and resolved vulnerabilities using **Snyk** for a production-ready codebase."*
 
 ---
-**Live Link:** https://foodjunctionbikram.in
+**Live Link:** https://job-board-alpha-lake.vercel.app/
 
 ---
 
