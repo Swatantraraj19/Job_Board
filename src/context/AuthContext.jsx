@@ -1,42 +1,63 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import {
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signOut,
+  sendPasswordResetEmail,
+  updateProfile
+} from "firebase/auth";
+import { doc, onSnapshot, setDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
+import { auth, db } from "../lib/firebase";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  // -- State Management --
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [savedJobs, setSavedJobs] = useState([]);
+  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
+  const [category, setCategory] = useState(() => localStorage.getItem("category") || "jobstories");
 
-  // We use lazy initialization for states that need to read from localStorage.
-  // This ensures we only read from the slow storage once during the initial render.
+  // 1. Listen for Auth Changes
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
 
-  const [category, setCategory] = useState(() => {
-    return localStorage.getItem("category") || "jobstories";
-  });
+  // 2. Listen for Firestore Saved Jobs (Real-time)
+  useEffect(() => {
+    if (!user) {
+      setSavedJobs([]);
+      return;
+    }
 
+    const userRef = doc(db, "users", user.uid);
+    const unsubscribe = onSnapshot(userRef, (docSnap) => {
+      if (docSnap.exists()) {
+        setSavedJobs(docSnap.data().savedJobs || []);
+      } else {
+        // Initialize user document if it doesn't exist
+        setDoc(userRef, { 
+          email: user?.email,
+          savedJobs: [] 
+        }, { merge: true });
+      }
+    });
+
+    return () => unsubscribe();
+  }, [user]);
+
+  // 3. Theme & Category (Keep in localStorage for non-auth preference)
   useEffect(() => {
     localStorage.setItem("category", category);
   }, [category]);
 
-  const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem("user");
-    return savedUser ? JSON.parse(savedUser) : null;
-  });
-
-  const [savedJobs, setSavedJobs] = useState(() => {
-    const saved = localStorage.getItem("savedJobs");
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  const [theme, setTheme] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("theme") || "light";
-    }
-    return "light";
-  });
-
-  // -- Effects --
-
-  // Apply the theme class to the HTML document root whenever the theme state changes.
-  // This allows Tailwind's 'dark:' selector to work globally.
   useEffect(() => {
     if (theme === "dark") {
       document.documentElement.classList.add("dark");
@@ -46,38 +67,46 @@ export function AuthProvider({ children }) {
     localStorage.setItem("theme", theme);
   }, [theme]);
 
-  // -- Actions --
+  // Actions
+  const toggleTheme = () => setTheme((prev) => (prev === "light" ? "dark" : "light"));
 
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  const loginWithEmail = (email, password) => signInWithEmailAndPassword(auth, email, password);
+  const signUpWithEmail = async (email, password, name) => {
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+    await updateProfile(result.user, { displayName: name });
+    return result;
   };
+  const loginWithGoogle = () => signInWithPopup(auth, new GoogleAuthProvider());
+  const logout = () => signOut(auth);
+  const resetPassword = (email) => sendPasswordResetEmail(auth, email);
 
-  const login = (username) => {
-    const newUser = { name: username };
-    setUser(newUser);
-    localStorage.setItem("user", JSON.stringify(newUser));
-  };
+  const toggleSaveJob = async (jobId) => {
+    if (!user) {
+      alert("Please login first to save jobs!");
+      return;
+    }
+    const userRef = doc(db, "users", user.uid);
+    const isSaved = savedJobs.includes(jobId);
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem("user");
-  };
-
-  const toggleSaveJob = (jobId) => {
-    setSavedJobs((prev) => {
-      const newSaved = prev.includes(jobId)
-        ? prev.filter((id) => id !== jobId) // Untoggle
-        : [...prev, jobId]; // Toggle on
-
-      localStorage.setItem("savedJobs", JSON.stringify(newSaved));
-      return newSaved;
-    });
+    try {
+      // Use setDoc with merge: true to create the document if it doesn't exist
+      await setDoc(userRef, {
+        email: user?.email,
+        savedJobs: isSaved ? arrayRemove(jobId) : arrayUnion(jobId),
+      }, { merge: true });
+    } catch (error) {
+       console.error("Error updating saved jobs:", error);
+    }
   };
 
   const value = {
     user,
-    login,
+    loading,
+    loginWithEmail,
+    signUpWithEmail,
+    loginWithGoogle,
     logout,
+    resetPassword,
     savedJobs,
     toggleSaveJob,
     category,
@@ -86,13 +115,15 @@ export function AuthProvider({ children }) {
     toggleTheme,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {!loading && children}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
+  if (!context) throw new Error("useAuth must be used within an AuthProvider");
   return context;
 }

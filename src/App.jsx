@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Briefcase, LogIn, LogOut, Sun, Moon } from "lucide-react";
+import { Briefcase, User, Sun, Moon } from "lucide-react";
 import JobLists from "./components/JobLists";
 import { useNavigate } from "react-router-dom";
 import { Route, Routes } from "react-router-dom";
@@ -10,6 +10,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./components/Home";
 import PublicRoute from "./components/PublicRoute";
 import SavedJobs from "./components/SavedJobs";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   const navigate = useNavigate();
@@ -46,20 +47,29 @@ function App() {
 
           {user ? (
             <div className="flex items-center gap-4">
-              <span className="text-zinc-600 dark:text-zinc-300 hidden md:inline">
-                Welcome, <b>{user.name}</b>
-              </span>
+              <div 
+                onClick={() => navigate("/profile")}
+                className="flex items-center gap-2 cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800 p-1.5 rounded-lg transition-colors border border-transparent hover:border-zinc-100 dark:hover:border-zinc-700"
+              >
+                <div className="p-1.5 bg-indigo-50 dark:bg-zinc-800 rounded-full text-indigo-600 dark:text-indigo-400 font-bold">
+                  <User size={18} />
+                </div>
+                <span className="text-zinc-600 dark:text-zinc-300 hidden md:inline text-sm font-bold pr-2">
+                   {user.displayName || user.email.split('@')[0]}
+                </span>
+              </div>
               <button
                 onClick={() => navigate("/saved")}
-                className="text-indigo-600 dark:text-indigo-400 font-medium text-sm hover:underline"
+                className="text-indigo-600 dark:text-indigo-400 font-bold text-sm hover:underline"
               >
-                Saved Jobs
+                Saved
               </button>
               <button
-                onClick={() => {
-                  (logout(), navigate("/", { replace: true }));
+                onClick={async () => {
+                  await logout();
+                  navigate("/", { replace: true });
                 }}
-                className="px-3 py-1 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-200 rounded-lg text-sm font-medium text-zinc-700 transition"
+                className="px-3 py-1 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-200 rounded-lg text-sm font-bold text-zinc-700 transition"
               >
                 Logout
               </button>
@@ -100,6 +110,15 @@ function App() {
           element={
             <ProtectedRoute>
               <SavedJobs />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
             </ProtectedRoute>
           }
         />
